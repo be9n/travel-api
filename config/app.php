@@ -5,6 +5,10 @@ use Illuminate\Support\ServiceProvider;
 
 return [
 
+    'paginationCount' => [
+        'tours' => 10,
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Application Name

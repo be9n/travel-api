@@ -19,7 +19,7 @@ class Travel extends Model
 
     protected $fillable = [
         'is_public',
-        // 'slug',
+        'slug',
         'name',
         'description',
         'number_of_days',

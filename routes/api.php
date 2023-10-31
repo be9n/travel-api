@@ -4,6 +4,8 @@ use App\Http\Controllers\Api\TourController;
 use App\Http\Controllers\Api\TravelController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\Admin;
+use App\Http\Controllers\Api\Auth\LoginController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,3 +25,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::get('travels', [TravelController::class, 'index']);
 Route::get('travel/{travel:slug}/tours', [TourController::class, 'index']);
+
+Route::group(['prefix' => 'admin', 'middleware' => 'auth:sanctum'], function (){
+    Route::post('travels', [Admin\TravelController::class, 'store']);
+
+Route::post('logout', [LoginController::class, 'logout']);
+
+});
+
+Route::post('login', [LoginController::class, 'login']);

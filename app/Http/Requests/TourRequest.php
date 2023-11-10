@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class TravelRequest extends FormRequest
+class TourRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -21,17 +21,12 @@ class TravelRequest extends FormRequest
      */
     public function rules(): array
     {
-        $rules = [
-            'is_public' => 'boolean',
-            'name' => 'required|unique:travels',
-            'description' => 'required',
-            'number_of_days' => 'required|integer',
-            'images' => 'nullable|max:3000'
+        return [
+            'name' => ['required'],
+            'starting_date' => ['required', 'date'],
+            'ending_date' => ['required', 'date', 'after:starting_date'],
+            'price' => ['required', 'numeric'],
+            'images' => ['nullable', 'max:3000']
         ];
-
-        if (request()->isMethod('put'))
-            $rules['name'] .= ',name,' . $this->travel->id;
-
-        return $rules;
     }
 }

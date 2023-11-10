@@ -19,7 +19,28 @@ class Tour extends Model
         'price',
     ];
 
-    public function price() : Attribute {
+    public function images()
+    {
+        return $this->morphMany(Image::class, 'imageable');
+    }
+
+    public function saveMorphedImages($images)
+    {
+        collect($images)->map(function ($image) {
+            $imageName = saveImage($image);
+
+            Image::create([
+                'filename' => $imageName,
+                'imageable_id' => $this->id,
+                'imageable_type' => get_class($this),
+            ]);
+        });
+
+        return $this;
+    }
+
+    public function price(): Attribute
+    {
         return Attribute::make(
             get: fn ($value) => $value / 100,
             set: fn ($value) => $value * 100,

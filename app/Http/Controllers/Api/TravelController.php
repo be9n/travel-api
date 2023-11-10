@@ -9,9 +9,10 @@ use Illuminate\Http\Request;
 
 class TravelController extends Controller
 {
-    public function index() {
-       $travels = Travel::where('is_public', true)->paginate();
-       
+    public function index()
+    {
+        $travels = Travel::latest()->with('images')->where('is_public', true)->paginate();
+
         return TravelResource::collection($travels);
     }
 }

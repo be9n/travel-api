@@ -25,21 +25,43 @@ class Travel extends Model
         'number_of_days',
     ];
 
-    public function tours() {
+    public function tours()
+    {
         return $this->hasMany(Tour::class);
     }
 
-    public function getSlugOptions() : SlugOptions
+    public function images()
+    {
+        return $this->morphMany(Image::class, 'imageable');
+    }
+
+    public function getSlugOptions(): SlugOptions
     {
         return SlugOptions::create()
             ->generateSlugsFrom('name')
             ->saveSlugsTo('slug');
     }
 
-    public function numberOfNights(): Attribute{
+    public function numberOfNights(): Attribute
+    {
         return Attribute::make(
             get: fn ($value, $attributes) => $attributes['number_of_days'] - 1
         );
+    }
+
+    public function saveMorphedImages($images)
+    {
+        collect($images)->map(function ($image) {
+            $imageName = saveImage($image);
+
+            Image::create([
+                'filename' => $imageName,
+                'imageable_id' => $this->id,
+                'imageable_type' => get_class($this),
+            ]);
+        });
+
+        return $this;
     }
 
     // public function getNumberOfNightsAttribute(){

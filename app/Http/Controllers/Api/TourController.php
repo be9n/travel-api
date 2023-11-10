@@ -25,6 +25,7 @@ class TourController extends Controller
             ])
             ->thenReturn()
             ->orderBy('starting_Date')
+            ->with('images')
             ->paginate(config('app.paginationCount.tours'));
 
         return TourResource::collection($tours);

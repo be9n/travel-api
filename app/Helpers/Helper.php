@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Image;
+use Illuminate\Database\Eloquent\Collection;
 
 function saveImage($file)
 {
@@ -25,9 +26,31 @@ function saveMultipleImages($files, $item, $modelName)
     return $data;
 }
 
-function getImagesNames($images)
+function getImageUrl($image)
 {
-    return collect($images)->map(fn ($image) => $image->only('id', 'filename'))->toArray();
+    return asset('uploads/images/' . $image);
+}
+
+function getImagesInfo($images)
+{
+    if ($images instanceof Collection) {
+        return collect($images)->map(function ($image) {
+            return [
+                'id' => $image->id,
+                'filename' => $image->filename,
+                'url' => getImageUrl($image->filename),
+            ];
+        })->toArray();
+    }
+}
+
+function getImageInfo($image)
+{
+    return [
+        'id' => $image->id,
+        'filename' => $image->filename,
+        'url' => getImageUrl($image->filename),
+    ];
 }
 
 function deleteExistedImage($oldImage)

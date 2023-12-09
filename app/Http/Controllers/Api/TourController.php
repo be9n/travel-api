@@ -18,15 +18,18 @@ class TourController extends Controller
     {
         $tours = Pipeline::send($travel->tours())
             ->through([
-                NameFilter::class,
                 DateFilter::class,
                 PriceFilter::class,
                 SortFilter::class,
             ])
             ->thenReturn()
+            ->search($request->term)
             ->orderBy('starting_Date')
-            ->with('images')
+            ->with('images', 'travel')
             ->paginate(config('app.paginationCount.tours'));
+
+        if ($tours->isEmpty())
+            return response(['message' => 'No tours found']);
 
         return TourResource::collection($tours);
     }

@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Nicolaslopezj\Searchable\SearchableTrait;
 
 class Tour extends Model
 {
-    use HasFactory, HasUuids;
+    use HasFactory, HasUuids, SearchableTrait;
 
     protected $fillable = [
         'travel_id',
@@ -18,6 +19,21 @@ class Tour extends Model
         'ending_date',
         'price',
     ];
+
+    protected $searchable = [
+        'columns' => [
+            'tours.name' => 10,
+            'images.filename' => 3,
+        ],
+        'joins' => [
+            'images' => ['tours.id', 'images.imageable_id'],
+        ],
+    ];
+
+    public function travel()
+    {
+        return $this->belongsTo(Travel::class);
+    }
 
     public function images()
     {

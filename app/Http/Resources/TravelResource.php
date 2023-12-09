@@ -21,7 +21,18 @@ class TravelResource extends JsonResource
             'description' => $this->description,
             'number_of_days' => $this->number_of_days,
             'number_of_nights' => $this->number_of_nights,
-            'images' => getImagesNames($this->images),
+            'images' => getImagesInfo($this->images),
+            'cover' => $this->when($this->cover, fn() => getImageInfo($this->cover)),
+
+            'tours' => $this->tours->map(function ($tour) {
+                return [
+                    'id' => $tour->id,
+                    'name' => $tour->name,
+                    'starting_date' => $tour->starting_date,
+                    'ending_date' => $tour->ending_date,
+                    'price' => $tour->price,
+                ];
+            }),
         ];
     }
 }

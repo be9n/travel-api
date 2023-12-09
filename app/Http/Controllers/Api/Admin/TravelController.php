@@ -13,7 +13,12 @@ class TravelController extends Controller
 {
     public function store(TravelRequest $request)
     {
-        $travel = Travel::create($request->validated())->saveMorphedImages($request->images);
+        $travel = Travel::create($request->validated())
+            ->saveMorphedImages(images: $request->images)
+            ->storeImage(
+                image: $request->cover,
+                relation: 'cover'
+            );
 
         return TravelResource::make($travel);
     }

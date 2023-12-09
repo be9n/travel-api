@@ -9,9 +9,13 @@ use Illuminate\Http\Request;
 
 class TravelController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $travels = Travel::latest()->with('images')->where('is_public', true)->paginate();
+        $travels = Travel::public()->search($request->term)->with(['images', 'tours', 'cover'])->paginate();
+
+        
+        if ($travels->isEmpty())
+            return response(['message' => 'No travels found']);
 
         return TravelResource::collection($travels);
     }

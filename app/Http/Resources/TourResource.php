@@ -20,7 +20,12 @@ class TourResource extends JsonResource
             'starting_date' => $this->starting_date,
             'ending_date' => $this->ending_date,
             'price' => number_format($this->price, 2),
-            'images' => getImagesNames($this->images),
+            'images' => getImagesInfo($this->images),
+            'travel' => [
+                'id' => $this->travel->id,
+                'name' => $this->travel->name,
+                'images' => getImagesInfo($this->travel->images),
+            ],
         ];
     }
 }
